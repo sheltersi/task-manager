@@ -5,65 +5,66 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
 
- /**
+    /**
      * Display a listing of the user's tasks.
      */
     public function index(Request $request)
     {
         $user = $request->user();
 
-        $search = $request->query('search');
-        $status = $request->query('status'); // pending | completed | null
-        $sort   = $request->query('sort', 'latest'); // latest | due_date | priority
+        $search = $request->input('search');
+        $status = $request->input('status');
+        $sort   = $request->input('sort', 'latest');
 
-        $query = $user->tasks()->query();
+        $query = $user->tasks();
 
-        // Search by title/description
-        if (!empty($search)) {
+        // Search
+        if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
-        // Filter by status
-        if (!empty($status)) {
-            $query->where('status', $status);
-        }
+        //Filter
+        $allowedStatuses = ['to_do', 'in_progress', 'in_review', 'completed'];
+
+        $query->when(in_array($status, $allowedStatuses), function ($q) use ($status) {
+            return $q->where('status', $status);
+        });
 
         // Sorting
-        if ($sort === 'due_date') {
-            $query->orderByRaw('due_date IS NULL') // push nulls to bottom
-                  ->orderBy('due_date', 'asc');
-        } elseif ($sort === 'priority') {
-            $query->orderBy('priority', 'desc');
-        } else {
-            $query->latest();
-        }
+        match ($sort) {
+            'due_date' => $query->orderByRaw('due_date IS NULL')->orderBy('due_date', 'asc'),
+            'priority' => $query->orderBy('priority', 'desc'),
+            default    => $query->latest(),
+        };
 
         $tasks = $query->paginate(10)->withQueryString();
 
         return view('tasks.index', compact('tasks', 'search', 'status', 'sort'));
     }
 
-/**
+    /**
      * Show the form for creating a new task.
      */
     public function create()
     {
+
         return view('tasks.create');
     }
 
     public function store(TaskRequest $request)
-{
-    $request->user()->tasks()->create($request->validated());
+    {
+        $request->user()->tasks()->create($request->validated());
 
-    return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
-}
+        return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
+    }
 
 
     /**
@@ -72,26 +73,26 @@ class TaskController extends Controller
     public function edit(Task $task)
     {
         // Prevent editing other users' tasks
-        $this->authorize('update', $task);
+        Gate::authorize('update', $task);
 
         return view('tasks.edit', compact('task'));
     }
 
 
-public function update(TaskRequest $request, Task $task)
-{
-    $this->authorize('update', $task);
+    public function update(TaskRequest $request, Task $task)
+    {
+        Gate::authorize('update', $task);
 
-    $task->update($request->validated());
+        $task->update($request->validated());
 
-    return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
-}
-/**
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
+    }
+    /**
      * Remove the specified task from storage.
      */
     public function destroy(Task $task)
     {
-        $this->authorize('delete', $task);
+        Gate::authorize('delete', $task);
 
         $task->delete();
 
@@ -100,58 +101,27 @@ public function update(TaskRequest $request, Task $task)
             ->with('success', 'Task deleted successfully.');
     }
 
-public function advance(Task $task)
+    public function updateStatus(Request $request, Task $task)
 {
-    $this->authorize('update', $task);
+    // Validate that the status is one of your allowed types
+    $validated = $request->validate([
+        'status' => 'required|in:to_do,in_progress,in_review,completed'
+    ]);
 
-    $flow = ['to_do', 'in_progress', 'in_review', 'completed'];
+    $task->update($validated);
 
-    $currentIndex = array_search($task->status, $flow, true);
-
-    // If status is invalid, reset to first stage
-    if ($currentIndex === false) {
-        $task->update(['status' => 'to_do']);
-        return back()->with('success', 'Task status reset to To Do.');
-    }
-
-    // If already completed, keep it completed (or reset if you want)
-    if ($task->status === 'completed') {
-        return back()->with('success', 'Task is already completed.');
-    }
-
-    $nextStatus = $flow[$currentIndex + 1];
-
-    $task->update(['status' => $nextStatus]);
-
-    return back()->with('success', 'Task moved to the next stage.');
+    return back()->with('success', 'Status updated successfully!');
 }
 
-
-   public function regress(Task $task)
+public function updatePriority(Request $request, Task $task)
 {
-    $this->authorize('update', $task);
+    // Validate that priority is between 1 and 5
+    $validated = $request->validate([
+        'priority' => 'required|integer|min:1|max:5'
+    ]);
 
-    $flow = ['to_do', 'in_progress', 'in_review', 'completed'];
+    $task->update($validated);
 
-    $currentIndex = array_search($task->status, $flow, true);
-
-    // If status is invalid, reset to first stage
-    if ($currentIndex === false) {
-        $task->update(['status' => 'to_do']);
-        return back()->with('success', 'Task status reset to To Do.');
-    }
-
-    // If already at the first stage, do nothing
-    if ($currentIndex === 0) {
-        return back()->with('success', 'Task is already at To Do.');
-    }
-
-    $previousStatus = $flow[$currentIndex - 1];
-
-    $task->update(['status' => $previousStatus]);
-
-    return back()->with('success', 'Task moved to the previous stage.');
+    return back()->with('success', 'Priority updated successfully!');
 }
-
-
 }

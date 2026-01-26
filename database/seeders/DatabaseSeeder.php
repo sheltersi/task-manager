@@ -20,9 +20,13 @@ class DatabaseSeeder extends Seeder
         ->has(Task::factory()->count(5))
         ->create();
 
-        User::factory()->create([
+        // Creates my specific test user, also with 5 tasks
+        User::factory()
+        ->has(Task::factory()->count(5))
+        ->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'password' => bcrypt('password'),
         ]);
 
 
