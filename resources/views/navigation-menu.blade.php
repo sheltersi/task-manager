@@ -86,7 +86,6 @@
                                     <img class="w-8 h-8 rounded-full object-cover ring-2 ring-transparent group-hover:ring-indigo-400 transition"
                                         src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
 
-                                    <!-- Name (optional, hides on small screens) -->
                                     <span class="hidden sm:block text-sm font-medium text-gray-700 dark:text-gray-200">
                                         {{ Auth::user()->name }}
                                     </span>
