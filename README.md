@@ -67,43 +67,55 @@ Users can securely manage tasks with **filtering, sorting, search, priorities, a
 ### 1) Clone the repository
 ```bash
 git clone https://github.com/sheltersi/laravel-internship-assessment.git
-cd laravel-internship-assessment
+cd laravel-internship-assessment 
+```
 
 #### 2) Install dependencies
+```bash
 composer install
 npm install
+```
 
 ### 3) Create your .env file **
+```bash
 cp .env.example .env
+```
 
 ### 4) Generate app key
+```bash
 php artisan key:generate
-
+```
 ### 5) Configure your database
+```bash
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=task_manager
 DB_USERNAME=root
 DB_PASSWORD=
-
+```
 ### 6) Run migrations
+```bash
 php artisan migrate
-
+```
 ### 7) Build frontend assets
+```bash
 npm run dev
-
+```
 ### 8) Start the server
+```bash
 php artisan serve
+```
 
 Now open the app in your browser:
 http://127.0.0.1:8000
 
 ### 🧪 Testing (Optional)
+```bash
 php artisan test
+```
 
 ### 📌 Notes
-
 Built using Laravel Jetstream (Livewire) for fast, secure authentication and UI scaffolding.
 
 Designed with focus on clean architecture, data privacy, and professional UX.
