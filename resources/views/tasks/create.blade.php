@@ -10,7 +10,7 @@
                 </p>
             </div>
 
-            <a href="{{ route('tasks.index') }}"
+            <a href="{{ route('dashboard') }}"
                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/60 transition shadow-sm">
                 ← Back to Tasks
             </a>
@@ -159,14 +159,10 @@
                         </div>
 
                         <div class="flex items-center justify-end gap-3">
-                            <a href="{{ route('tasks.index') }}"
-                               class="inline-flex items-center px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700
-                                      text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/60 transition">
-                                Back to List
-                            </a>
+
 
                             <button type="submit"
-                                    class="inline-flex items-center px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700
+                                    class="inline-flex items-center px-8 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700
                                            text-white font-semibold shadow-sm transition transform hover:-translate-y-0.5 active:translate-y-0">
                                 Create Task
                             </button>

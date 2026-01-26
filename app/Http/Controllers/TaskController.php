@@ -47,7 +47,7 @@ class TaskController extends Controller
 
         $tasks = $query->paginate(10)->withQueryString();
 
-        return view('tasks.index', compact('tasks', 'search', 'status', 'sort'));
+        return view('dashboard', compact('tasks', 'search', 'status', 'sort'));
     }
 
     /**
@@ -63,7 +63,7 @@ class TaskController extends Controller
     {
         $request->user()->tasks()->create($request->validated());
 
-        return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
+        return redirect()->route('dashboard')->with('success', 'Task created successfully.');
     }
 
 
@@ -85,8 +85,20 @@ class TaskController extends Controller
 
         $task->update($request->validated());
 
-        return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
+        return redirect()->route('dashboard')->with('success', 'Task updated successfully.');
     }
+
+    /**
+     * Display the specified task details.
+     */
+    public function show(Task $task)
+    {
+
+        Gate::authorize('view', $task);
+
+        return view('tasks.show', compact('task'));
+    }
+
     /**
      * Remove the specified task from storage.
      */
@@ -97,31 +109,31 @@ class TaskController extends Controller
         $task->delete();
 
         return redirect()
-            ->route('tasks.index')
+            ->route('dashboard')
             ->with('success', 'Task deleted successfully.');
     }
 
     public function updateStatus(Request $request, Task $task)
-{
-    // Validate that the status is one of your allowed types
-    $validated = $request->validate([
-        'status' => 'required|in:to_do,in_progress,in_review,completed'
-    ]);
+    {
+        // Validate that the status is one of your allowed types
+        $validated = $request->validate([
+            'status' => 'required|in:to_do,in_progress,in_review,completed'
+        ]);
 
-    $task->update($validated);
+        $task->update($validated);
 
-    return back()->with('success', 'Status updated successfully!');
-}
+        return back()->with('success', 'Status updated successfully!');
+    }
 
-public function updatePriority(Request $request, Task $task)
-{
-    // Validate that priority is between 1 and 5
-    $validated = $request->validate([
-        'priority' => 'required|integer|min:1|max:5'
-    ]);
+    public function updatePriority(Request $request, Task $task)
+    {
+        // Validate that priority is between 1 and 5
+        $validated = $request->validate([
+            'priority' => 'required|integer|min:1|max:5'
+        ]);
 
-    $task->update($validated);
+        $task->update($validated);
 
-    return back()->with('success', 'Priority updated successfully!');
-}
+        return back()->with('success', 'Priority updated successfully!');
+    }
 }

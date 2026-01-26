@@ -25,7 +25,7 @@
 
             {{-- Filters --}}
             <div class="mb-6 bg-white dark:bg-gray-800 shadow rounded-xl p-4">
-                <form method="GET" action="{{ route('tasks.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
                     {{-- Search --}}
                     <div class="md:col-span-2">
@@ -77,7 +77,7 @@
                             Apply
                         </button>
 
-                        <a href="{{ route('tasks.index') }}"
+                        <a href="{{ route('dashboard') }}"
                             class="px-4 py-2 bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg text-sm font-semibold">
                             Reset
                         </a>

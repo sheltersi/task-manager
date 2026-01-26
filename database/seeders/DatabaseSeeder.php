@@ -25,8 +25,14 @@ class DatabaseSeeder extends Seeder
         ->has(Task::factory()->count(5))
         ->create([
             'name' => 'Test User',
-            'email' => 'test@example.com',
+            'email' => 'test@gmail.com',
             'password' => bcrypt('password'),
+        ]);
+
+        User::create([
+            'name' => 'sher',
+            'email' => 'sher@gmail.com',
+             'password' => bcrypt('password'),
         ]);
 
 
