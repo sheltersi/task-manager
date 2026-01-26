@@ -30,7 +30,6 @@ class UpdatePasswordTest extends TestCase
 
  public function test_current_password_must_be_correct(): void
 {
-    // 1. Create the user with a known password
     $user = User::factory()->create([
         'password' => Hash::make('#Secret123'),
     ]);
@@ -39,39 +38,35 @@ class UpdatePasswordTest extends TestCase
 
     Livewire::test(UpdatePasswordForm::class)
         ->set('state', [
-            'current_password' => 'wrong-password', // 2. Intentionally wrong
+            'current_password' => 'wrong-password',
             'password' => 'new-password123',
             'password_confirmation' => 'new-password123',
         ])
         ->call('updatePassword')
-        ->assertHasErrors(['current_password']); // 3. Expect an error here
+        ->assertHasErrors(['current_password']);
 
-    // 4. Verify the database password is STILL #Secret123
     $this->assertTrue(Hash::check('#Secret123', $user->fresh()->password));
 }
 
-   public function test_new_passwords_must_match(): void
-{
-    // 1. Create the user with a known password
-    $user = User::factory()->create([
-        'password' => Hash::make('#Secret123'),
-    ]);
+  public function test_new_passwords_must_match(): void
+    {
+        $user = User::factory()->create([
+            'password' => Hash::make('#Secret123'),
+        ]);
 
-    $this->actingAs($user);
+        $this->actingAs($user);
 
-    Livewire::test(UpdatePasswordForm::class)
-        ->set('state', [
-            'current_password' => 'wrong-password', // 2. Intentionally wrong
-            'password' => 'new-password123',
-            'password_confirmation' => 'new-password123',
-        ])
-        ->call('updatePassword')
-        ->assertHasErrors(['current_password']); // 3. Expect an error here
+        Livewire::test(UpdatePasswordForm::class)
+            ->set('state', [
+                'current_password' => '#Secret123',
+                'password' => 'new-password123',
+                'password_confirmation' => 'mismatched-password',
+            ])
+            ->call('updatePassword')
+            ->assertHasErrors(['password']); 
 
-    // 4. Verify the database password is STILL #Secret123
-    $this->assertTrue(Hash::check('#Secret123', $user->fresh()->password));
-
+        $this->assertTrue(Hash::check('#Secret123', $user->fresh()->password));
     }
 
-    
+
 }
