@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
 
         // Creates my specific test user, also with 5 tasks
         User::factory()
-        ->has(Task::factory()->count(5))
+        ->has(Task::factory()->count(15))
         ->create([
             'name' => 'Test User',
             'email' => 'test@gmail.com',

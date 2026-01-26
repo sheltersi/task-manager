@@ -116,6 +116,7 @@ php artisan test
 ```
 
 ### 📌 Notes
+
 Built using Laravel Jetstream (Livewire) for fast, secure authentication and UI scaffolding.
 
 Designed with focus on clean architecture, data privacy, and professional UX.
