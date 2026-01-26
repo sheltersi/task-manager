@@ -19,44 +19,59 @@ class UpdatePasswordTest extends TestCase
 
         Livewire::test(UpdatePasswordForm::class)
             ->set('state', [
-                'current_password' => 'password',
-                'password' => 'new-password',
-                'password_confirmation' => 'new-password',
+                'current_password' => '@Secret123',
+                'password' => '#Secret123',
+                'password_confirmation' => '#Secret123',
             ])
             ->call('updatePassword');
 
-        $this->assertTrue(Hash::check('new-password', $user->fresh()->password));
+        $this->assertTrue(Hash::check('#Secret123', $user->fresh()->password));
     }
 
-    public function test_current_password_must_be_correct(): void
-    {
-        $this->actingAs($user = User::factory()->create());
+ public function test_current_password_must_be_correct(): void
+{
+    // 1. Create the user with a known password
+    $user = User::factory()->create([
+        'password' => Hash::make('#Secret123'),
+    ]);
 
-        Livewire::test(UpdatePasswordForm::class)
-            ->set('state', [
-                'current_password' => 'wrong-password',
-                'password' => 'new-password',
-                'password_confirmation' => 'new-password',
-            ])
-            ->call('updatePassword')
-            ->assertHasErrors(['current_password']);
+    $this->actingAs($user);
 
-        $this->assertTrue(Hash::check('password', $user->fresh()->password));
+    Livewire::test(UpdatePasswordForm::class)
+        ->set('state', [
+            'current_password' => 'wrong-password', // 2. Intentionally wrong
+            'password' => 'new-password123',
+            'password_confirmation' => 'new-password123',
+        ])
+        ->call('updatePassword')
+        ->assertHasErrors(['current_password']); // 3. Expect an error here
+
+    // 4. Verify the database password is STILL #Secret123
+    $this->assertTrue(Hash::check('#Secret123', $user->fresh()->password));
+}
+
+   public function test_new_passwords_must_match(): void
+{
+    // 1. Create the user with a known password
+    $user = User::factory()->create([
+        'password' => Hash::make('#Secret123'),
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test(UpdatePasswordForm::class)
+        ->set('state', [
+            'current_password' => 'wrong-password', // 2. Intentionally wrong
+            'password' => 'new-password123',
+            'password_confirmation' => 'new-password123',
+        ])
+        ->call('updatePassword')
+        ->assertHasErrors(['current_password']); // 3. Expect an error here
+
+    // 4. Verify the database password is STILL #Secret123
+    $this->assertTrue(Hash::check('#Secret123', $user->fresh()->password));
+
     }
 
-    public function test_new_passwords_must_match(): void
-    {
-        $this->actingAs($user = User::factory()->create());
-
-        Livewire::test(UpdatePasswordForm::class)
-            ->set('state', [
-                'current_password' => 'password',
-                'password' => 'new-password',
-                'password_confirmation' => 'wrong-password',
-            ])
-            ->call('updatePassword')
-            ->assertHasErrors(['password']);
-
-        $this->assertTrue(Hash::check('password', $user->fresh()->password));
-    }
+    
 }
