@@ -57,9 +57,6 @@ Users can securely manage tasks with **filtering, sorting, search, priorities, a
 ### ✏️ Edit Task
 ![Edit Task](public/screenshots/edit-task.png)
 
-### 👤 Profile Page
-![Profile](public/screenshots/profile.png)
-
 ---
 
 ## 📦 Installation & Setup
