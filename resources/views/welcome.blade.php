@@ -131,30 +131,30 @@
                         <div class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10">
                             <div>
                                 <p class="font-medium">Finish internship assessment</p>
-                                <p class="text-xs text-gray-400">Priority: High • Due: Today</p>
+                                <p class="text-xs text-gray-400">Priority: High • Due: Monday 27 January 2026</p>
                             </div>
                             <span class="text-xs px-3 py-1 rounded-full bg-green-500/20 text-green-300 border border-green-500/30">
-                                Pending
+                                Done
                             </span>
                         </div>
 
                         <div class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10">
                             <div>
                                 <p class="font-medium">Build Task CRUD</p>
-                                <p class="text-xs text-gray-400">Priority: Medium • Due: Tomorrow</p>
+                                <p class="text-xs text-gray-400">Priority: Medium • Due: Monday 27 January 2026</p>
                             </div>
-                            <span class="text-xs px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">
-                                In Progress
+                            <span class="text-xs px-3 py-1 rounded-full bg-green-500/20 text-green-300 border border-green-500/30">
+                                Done
                             </span>
                         </div>
 
                         <div class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10">
                             <div>
                                 <p class="font-medium">Push project to GitHub</p>
-                                <p class="text-xs text-gray-400">Priority: Low • Due: This week</p>
+                                <p class="text-xs text-gray-400">Priority: Low • Due: Monday 27 January 2026</p>
                             </div>
-                            <span class="text-xs px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                                Planned
+                            <span class="text-xs px-3 py-1 rounded-full bg-green-500/20 text-green-300 border border-green-500/30">
+                                Done
                             </span>
                         </div>
                     </div>

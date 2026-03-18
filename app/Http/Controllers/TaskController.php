@@ -15,6 +15,7 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
+
         $user = $request->user();
 
         $search = $request->input('search');
@@ -55,7 +56,6 @@ class TaskController extends Controller
      */
     public function create()
     {
-
         return view('tasks.create');
     }
 

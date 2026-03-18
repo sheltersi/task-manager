@@ -58,26 +58,27 @@
     </script>
     <script>
         document.querySelectorAll('.delete-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const form = this.closest('.delete-form');
+            button.addEventListener('click', function() {
+                const form = this.closest('.delete-form');
 
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "This task will be permanently removed!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#ef4444', // Tailwind red-500
-            cancelButtonColor: '#6b7280',  // Tailwind gray-500
-            confirmButtonText: 'Yes, delete it!',
-            background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#fff',
-            color: document.documentElement.classList.contains('dark') ? '#fff' : '#000',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "This task will be permanently removed!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444', // Tailwind red-500
+                    cancelButtonColor: '#6b7280', // Tailwind gray-500
+                    confirmButtonText: 'Yes, delete it!',
+                    background: document.documentElement.classList.contains('dark') ? '#1f2937' :
+                        '#fff',
+                    color: document.documentElement.classList.contains('dark') ? '#fff' : '#000',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
         });
-    });
-});
     </script>
 </body>
 
