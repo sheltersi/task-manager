@@ -16,12 +16,13 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
+        $faker = \Faker\Factory::create();
         return [
-            'title' => fake()->sentence(4),
-            'description' => fake()->optional()->paragraph(),
-            'status' => fake()->randomElement(['to_do', 'in_progress', 'in_review', 'completed']),
-            'priority' => fake()->numberBetween(1,5),
-            'due_date' => fake()->optional()->dateTimeBetween('now','+14 days'),
+            'title' => $faker->sentence(4),
+            'description' => $faker->optional()->paragraph(),
+            'status' => $faker->randomElement(['to_do', 'in_progress', 'in_review', 'completed']),
+            'priority' => $faker->numberBetween(1,5),
+            'due_date' => $faker->optional()->dateTimeBetween('now','+14 days'),
 
         ];
     }
