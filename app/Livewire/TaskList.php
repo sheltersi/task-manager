@@ -2,6 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\Task;
+use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -13,16 +16,47 @@ class TaskList extends Component
     public string $status = '';
     public string $sort = 'latest';
 
-    public function updatedSearch(): void { $this->resetPage(); }
-    public function updatedStatus(): void { $this->resetPage(); }
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+    public function updatedStatus(): void
+    {
+        $this->resetPage();
+    }
+
+    public function delete(int $id): void
+{
+    $task = Task::findOrFail($id);
+
+    Gate::authorize('delete', $task);
+
+    $task->delete();
+
+    session()->flash('success', 'Task deleted.');
+}
+
+    #[Computed]
+    public function stats(): array
+    {
+        $user = auth()->user();
+
+        return [
+            'total'       => $user->tasks()->count(),
+            'in_progress' => $user->tasks()->where('status', 'in_progress')->count(),
+            'in_review'   => $user->tasks()->where('status', 'in_review')->count(),
+            'completed'   => $user->tasks()->where('status', 'completed')->count(),
+        ];
+    }
     public function render()
     {
-          $query = auth()->user()->tasks();
+        $query = auth()->user()->tasks();
 
         if ($this->search) {
-            $query->where(fn($q) => $q
-                ->where('title', 'like', "%{$this->search}%")
-                ->orWhere('description', 'like', "%{$this->search}%")
+            $query->where(
+                fn($q) => $q
+                    ->where('title', 'like', "%{$this->search}%")
+                    ->orWhere('description', 'like', "%{$this->search}%")
             );
         }
 
@@ -37,7 +71,7 @@ class TaskList extends Component
             default    => $query->latest(),
         };
 
-        return view('livewire.task-list',[
+        return view('livewire.task-list', [
             'tasks' => $query->paginate(10),
         ]);
     }

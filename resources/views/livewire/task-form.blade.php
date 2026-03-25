@@ -1,4 +1,4 @@
-<div class="max-w-2xl">
+<div class="mx-4 md:mx-24 my-6">
 
     {{-- Header --}}
     <div class="flex items-center gap-3 mb-6">

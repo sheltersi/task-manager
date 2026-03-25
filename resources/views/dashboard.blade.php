@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="min-h-screen bg-[#F7F6F2] p-6">
+    <div class="my-4 md:mx-12 mx-4 bg-[#F7F6F2] p-6">
 
         {{-- Header --}}
         <div class="flex items-center justify-between mb-7">
@@ -12,22 +12,7 @@
             </div>
         </div>
 
-        {{-- Stats --}}
-        <div class="grid grid-cols-4 gap-2.5 mb-6">
-            @foreach([
-                ['label' => 'Total',       'value' => $tasks->total()],
-                ['label' => 'In progress', 'value' => auth()->user()->tasks()->where('status','in_progress')->count()],
-                ['label' => 'In review',   'value' => auth()->user()->tasks()->where('status','in_review')->count()],
-                ['label' => 'Completed',   'value' => auth()->user()->tasks()->where('status','completed')->count()],
-            ] as $stat)
-            <div class="bg-white border border-black/[0.07] rounded-xl p-4">
-                <div class="text-[11px] uppercase tracking-wide text-gray-400 mb-1">{{ $stat['label'] }}</div>
-                <div class="text-[22px] font-medium font-mono tracking-tight text-gray-900">{{ str_pad($stat['value'], 2, '0', STR_PAD_LEFT) }}</div>
-            </div>
-            @endforeach
-        </div>
-
-        {{-- Task list component --}}
+        {{-- Task list component (owns stats too) --}}
         <livewire:task-list />
     </div>
 </x-app-layout>
