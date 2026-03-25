@@ -22,6 +22,7 @@ class TaskStatusSelect extends Component
     {
         Gate::authorize('update', $this->task);
         $this->task->update(['status' => $this->status]);
+        $this->dispatch('task-status-updated');
     }
     public function render()
     {

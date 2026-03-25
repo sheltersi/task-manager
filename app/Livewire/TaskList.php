@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Task;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -47,6 +48,15 @@ class TaskList extends Component
             'in_review'   => $user->tasks()->where('status', 'in_review')->count(),
             'completed'   => $user->tasks()->where('status', 'completed')->count(),
         ];
+    }
+
+    #[On('task-status-updated')]
+    public function refreshStats(): void
+    {
+        // This method will be called whenever the 'task-status-updated' event is dispatched.
+        // You can perform any necessary actions here, such as refreshing data or updating the UI.
+        // For this example, we don't need to do anything specific, as the stats will be recomputed automatically.
+        unset($this->stats); // Clear the cached stats to force recomputation
     }
     public function render()
     {

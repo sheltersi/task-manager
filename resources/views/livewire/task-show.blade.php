@@ -1,4 +1,4 @@
-<div class="max-w-2xl">
+<div class="mx-6 md:mx-[120px] my-8">
 
     {{-- Header --}}
     <div class="flex items-center justify-between mb-6">
@@ -88,6 +88,7 @@
         {{-- Inline status change --}}
         <div class="px-6 py-4 border-t border-black/[0.06] bg-[#F7F6F2]/60">
             <livewire:task-status-select :task="$task" :key="'show-status-'.$task->id" />
+
         </div>
     </div>
 </div>
