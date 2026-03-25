@@ -15,10 +15,12 @@ class TaskStatusSelect extends Component
     {
         Gate::authorize('update', $task);
         $this->status = $task->status;
+        $this->status = $task->status;
     }
 
     public function updatedStatus(): void
     {
+        Gate::authorize('update', $this->task);
         $this->task->update(['status' => $this->status]);
     }
     public function render()
