@@ -91,4 +91,8 @@
 
         </div>
     </div>
+    {{-- Comments section --}}
+    <div class="mt-6 bg-white border border-black/[0.07] rounded-xl p-6">
+        <livewire:task-comment :task="$task" :key="'comments-'.$task->id" />
+    </div>
 </div>
