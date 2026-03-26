@@ -104,6 +104,11 @@
             </div>
         </div>
 
+        {{-- Subtasks --}}
+        <div class="px-6 py-4 border-t border-black/[0.06]">
+            <livewire:subtask-form :task="$task" :key="'subtasks-' . $task->id" />
+        </div>
+
         {{-- Inline status change --}}
         <div class="px-6 py-4 border-t border-black/[0.06] bg-[#F7F6F2]/60">
             @if ($task->user_id === auth()->id())

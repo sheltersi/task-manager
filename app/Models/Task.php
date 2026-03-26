@@ -46,6 +46,11 @@ class Task extends Model
         return $this->hasMany(Comment::class)->latest();
     }
 
+    public function subtasks()
+    {
+        return $this->hasMany(Subtask::class);
+    }
+
     public function shares()
     {
         return $this->hasMany(TaskShare::class);
