@@ -76,6 +76,13 @@ class TaskList extends Component
         ];
     }
 
+#[Computed]
+public function sharedCount(): int
+{
+    return Task::whereHas('shares', fn($q) =>
+        $q->where('user_id', auth()->id())
+    )->count();
+}
 
     public function render()
     {

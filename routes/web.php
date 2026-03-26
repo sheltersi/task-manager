@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\TaskController;
+use App\Livewire\SharedTaskList;
 use App\Livewire\TaskForm;
 use App\Livewire\TaskList;
 use App\Livewire\TaskShow;
@@ -28,4 +29,5 @@ Route::middleware([
 Route::get('/tasks/create', TaskForm::class)->name('tasks.create');
 Route::get('/tasks/{task}/edit', TaskForm::class)->name('tasks.edit');
 Route::get('/tasks/{task}', TaskShow::class)->name('tasks.show');
+Route::get('/shared', SharedTaskList::class)->name('shared.tasks');
 });

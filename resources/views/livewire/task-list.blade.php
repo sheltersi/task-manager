@@ -68,6 +68,18 @@
             <option value="priority">Priority</option>
         </select>
 
+        {{-- Shared with me badge --}}
+        @if ($this->sharedCount > 0)
+            <a href="{{ route('shared.tasks') }}" wire:navigate
+                class="relative h-[34px] flex items-center gap-2 px-3 bg-white border border-black/[0.07] rounded-lg text-[13px] text-gray-600 hover:bg-[#F7F6F2] transition-colors">
+                Shared with me
+                <span
+                    class="inline-flex items-center justify-center h-[18px] min-w-[18px] px-1.5 rounded-full bg-[#FAECE7] text-[#993C1D] text-[10px] font-medium">
+                    {{ $this->sharedCount }}
+                </span>
+            </a>
+        @endif
+
         <a href="{{ route('tasks.create') }}" wire:navigate
             class="h-[40px] bg-black text-white rounded-xl px-5 text-sm font-medium flex items-center gap-2 hover:bg-gray-800 transition shadow-sm">
             + New Task
@@ -75,7 +87,7 @@
     </div>
 
     {{-- Shared with me section --}}
-    <livewire:shared-task-list :key="'shared-tasks'" />
+    {{-- <livewire:shared-task-list :key="'shared-tasks'" /> --}}
 
     {{-- Table (owned by TaskTable, only this part re-renders on delete) --}}
     <livewire:task-table :search="$search" :status="$status" :sort="$sort" :key="'task-table'" />
