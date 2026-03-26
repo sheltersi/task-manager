@@ -23,6 +23,8 @@ class TaskPrioritySelect extends Component
         Gate::authorize('update', $this->task);
         $this->priority = $value;
         $this->task->update(['priority' => $this->priority]);
+          // Tell the parent to update stats without re-rendering everything
+        $this->dispatch('update-stats');
     }
         public function render()
     {
