@@ -45,4 +45,32 @@ public function comments()
     return $this->hasMany(Comment::class)->latest();
 }
 
+public function shares()
+{
+    return $this->hasMany(TaskShare::class);
+}
+
+public function collaborators()
+{
+    return $this->hasManyThrough(User::class, TaskShare::class, 'task_id', 'id', 'id', 'user_id');
+}
+
+// Helper to check if a user has access
+public function sharedWith(User $user): bool
+{
+    return $this->shares()->where('user_id', $user->id)->exists();
+}
+
+// Helper to check if a user can comment
+public function canComment(User $user): bool
+{
+    if ($this->user_id === $user->id) return true;
+
+    return $this->shares()
+        ->where('user_id', $user->id)
+        ->where('role', 'commenter')
+        ->exists();
+}
+
+
 }

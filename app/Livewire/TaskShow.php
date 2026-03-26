@@ -12,11 +12,22 @@ class TaskShow extends Component
 
  public function mount(Task $task): void
     {
+        // Temporarily dump to see what's happening
+    // dd([
+    //     'task_owner'    => $task->user_id,
+    //     'current_user'  => auth()->id(),
+    //     'shares'        => $task->shares()->where('user_id', auth()->id())->get(),
+    //     'policy_result' => auth()->user()->can('view', $task),
+    // ]);
         Gate::authorize('view', $task);
+        // dd('we are here');
         $this->task = $task;
+        // dd('we are here 2');
+
     }
     public function delete(): void
 {
+
     Gate::authorize('delete', $this->task);
 
     $this->task->delete();
