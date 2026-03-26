@@ -6,10 +6,13 @@ use App\Models\Task;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class TaskForm extends Component
 {
-      public ?Task $task = null;
+    use WithFileUploads;
+
+    public ?Task $task = null;
 
     #[Validate('required|string|max:255')]
     public string $title = '';
@@ -26,33 +29,64 @@ class TaskForm extends Component
     #[Validate('nullable|date')]
     public ?string $due_date = null;
 
+    #[Validate('nullable|image|max:2048')]
+    public $image = null;
+
+    public ?string $imagePreview = null;
+
     public function mount(?Task $task = null): void
     {
-        // $this->task = $task;
         if ($task) {
             Gate::authorize('update', $task);
-            // $this->fill($task->only('title', 'description', 'status', 'priority', 'due_date'));
-               $this->task = $task;
-            $this->title       = $task->title;
+            $this->task = $task;
+            $this->title = $task->title;
             $this->description = $task->description ?? '';
-            $this->status      = $task->status;
-            $this->priority    = $task->priority;
-            $this->due_date    = $task->due_date?->format('Y-m-d');
+            $this->status = $task->status;
+            $this->priority = $task->priority;
+            $this->due_date = $task->due_date?->format('Y-m-d');
         }
+    }
+
+    public function updatedImage(): void
+    {
+        if ($this->image) {
+            $this->imagePreview = $this->image->temporaryUrl();
+        } else {
+            $this->imagePreview = null;
+        }
+    }
+
+    public function removeImage(): void
+    {
+        $this->image = null;
+        $this->imagePreview = null;
     }
 
     public function save(): void
     {
         $validated = $this->validate();
 
-         if ($this->task) {
-            Gate::authorize('update', $this->task);
-            $this->task->update($validated);
-        } else {
-            auth()->user()->tasks()->create($validated);
+        $imagePath = $this->task?->image_path;
+        if ($this->image) {
+            $imagePath = $this->image->store('task-images', 'public');
         }
- $this->redirect(route('dashboard'), navigate: true);
 
+        $data = [
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+            'status' => $validated['status'],
+            'priority' => $validated['priority'],
+            'due_date' => $validated['due_date'] ?? null,
+            'image_path' => $imagePath,
+        ];
+
+        if ($this->task) {
+            Gate::authorize('update', $this->task);
+            $this->task->update($data);
+        } else {
+            auth()->user()->tasks()->create($data);
+        }
+        $this->redirect(route('dashboard'), navigate: true);
     }
 
     public function render()

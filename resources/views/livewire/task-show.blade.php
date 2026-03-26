@@ -1,3 +1,6 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
 <div class="mx-6 md:mx-[120px] my-8">
 
     {{-- Header --}}
@@ -8,7 +11,7 @@
                 class="w-[30px] h-[30px] flex items-center justify-center border border-black/[0.07] rounded-lg bg-white text-gray-400 hover:text-gray-700 text-sm transition-colors">
                 ←
             </a>
-            <h2 class="text-[16px] font-medium text-gray-900">Task detail</h2>
+            <h2 class="text-[16px] font-medium text-gray-900">All Tasks</h2>
         </div>
         <div class="flex items-center gap-2">
             {{-- Share manager (owner only, handles its own visibility) --}}
@@ -51,6 +54,17 @@
             </div>
             @if ($task->description)
                 <p class="mt-3 text-[13px] text-gray-500 leading-relaxed">{{ $task->description }}</p>
+            @endif
+
+            @if($task->image_path)
+                <div class="mt-3">
+                    <img
+                        src="{{ Storage::url($task->image_path) }}"
+                        alt="Task attachment"
+                        class="h-48 w-auto rounded-lg border border-black/[0.08] cursor-pointer hover:opacity-90 transition-opacity"
+                        onclick="window.open('{{ Storage::url($task->image_path) }}', '_blank')"
+                    >
+                </div>
             @endif
         </div>
 

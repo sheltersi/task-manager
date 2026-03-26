@@ -1,4 +1,4 @@
-<div x-data="{ showFilters: false }" class="mt-10">
+<div x-data="{ showFilters: false }" class="mx-10 my-10 md:mx-24">
 @if($this->totalShared > 0)
 
 {{-- Section Header --}}

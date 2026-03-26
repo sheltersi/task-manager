@@ -1,3 +1,6 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
 <div>
     {{-- Comment count heading --}}
     <h3 class="text-[13px] font-medium text-gray-900 mb-4">
@@ -35,6 +38,18 @@
                     <p class="text-[13px] text-gray-600 leading-relaxed">
                         {{ $comment->body }}
                     </p>
+
+                    {{-- Image display --}}
+                    @if($comment->image_path)
+                        <div class="mt-2">
+                            <img
+                                src="{{ Storage::url($comment->image_path) }}"
+                                alt="Comment image"
+                                class="h-32 w-32 object-cover rounded-lg border border-black/[0.08] cursor-pointer hover:opacity-90 transition-opacity"
+                                onclick="window.open('{{ Storage::url($comment->image_path) }}', '_blank')"
+                            >
+                        </div>
+                    @endif
 
                     {{-- Delete — only visible to comment author --}}
                     @if($comment->user_id === auth()->id())

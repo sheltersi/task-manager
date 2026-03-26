@@ -13,7 +13,7 @@
     </div>
 
     {{-- Card --}}
-    <div class="bg-white border border-black/[0.07] rounded-xl p-6">
+    <form wire:submit="save" class="bg-white border border-black/[0.07] rounded-xl p-6">
         <div class="grid grid-cols-2 gap-4">
 
             {{-- Title --}}
@@ -38,6 +38,44 @@
                     class="border border-black/[0.08] rounded-lg px-3 py-2.5 text-[13px] text-gray-900 outline-none focus:border-black/25 placeholder-gray-300 resize-none leading-relaxed"
                 ></textarea>
                 @error('description') <p class="text-[12px] text-red-500 mt-0.5">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Image --}}
+            <div class="col-span-2 flex flex-col gap-1.5">
+                <label class="text-[11px] font-medium uppercase tracking-wide text-gray-400">Attachment</label>
+
+                {{-- Image preview --}}
+                @if($imagePreview)
+                    <div class="relative inline-block">
+                        <img src="{{ $imagePreview }}" alt="Image preview" class="h-32 w-32 object-cover rounded-lg border border-black/[0.08]">
+                        <button
+                            type="button"
+                            wire:click="removeImage"
+                            class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-[12px] hover:bg-red-600">
+                            ×
+                        </button>
+                    </div>
+                @endif
+
+                {{-- Image upload button --}}
+                @if(!$imagePreview)
+                    <label class="inline-flex items-center gap-2 px-4 py-2.5 border border-black/[0.08] rounded-lg text-[13px] text-gray-500 hover:text-gray-700 hover:border-black/20 cursor-pointer w-fit transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <span>Attach image</span>
+                        <input
+                            type="file"
+                            wire:model="image"
+                            accept="image/*"
+                            class="hidden"
+                        >
+                    </label>
+                @endif
+
+                @error('image')
+                    <p class="text-[12px] text-red-500 mt-0.5">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Status --}}
@@ -95,13 +133,13 @@
                 Cancel
             </a>
             <button
-                wire:click="save"
+                type="submit"
                 wire:loading.attr="disabled"
                 class="h-[34px] px-5 bg-gray-900 text-white rounded-lg text-[13px] font-medium hover:bg-gray-800 disabled:opacity-50 transition-colors"
             >
-                <span wire:loading.remove>Save task</span>
-                <span wire:loading>Saving…</span>
+                <span wire:loading.remove wire:target="save,image">Save task</span>
+                <span wire:loading wire:target="save,image">Saving…</span>
             </button>
         </div>
-    </div>
+    </form>
 </div>

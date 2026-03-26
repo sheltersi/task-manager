@@ -32,7 +32,7 @@
 
                     {{-- Title + helper --}}
                     <div class="mb-8">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Task Details</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">All Tasks</h3>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                             Keep it clear and actionable. You can also change the workflow stage and priority.
                         </p>
