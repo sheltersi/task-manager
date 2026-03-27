@@ -11,12 +11,15 @@ use Livewire\WithPagination;
 class TaskTable extends Component
 {
     use WithPagination;
+    public ?int $deletingTaskId = null;
 
     // Received from the parent TaskList component
     // These are passed in like: <livewire:task-table :search="$search" ... />
     public string $search = '';
     public string $status = '';
     public string $sort = 'latest';
+
+
 
     // Listen for the parent telling us to reset the page
     // e.g. when filters change in TaskList
@@ -38,17 +41,29 @@ class TaskTable extends Component
         // Just receiving the event causes this component to re-render
     }
 
-    public function delete(int $id): void
+     public function confirmDelete(int $id): void
     {
-        $task = Task::findOrFail($id);
+        $this->deletingTaskId = $id;
+    }
+
+    public function delete(): void
+    {
+        $task = Task::findOrFail($this->deletingTaskId);
         Gate::authorize('delete', $task);
         $task->delete();
 
+        $this->deletingTaskId = null;
         // Tell the parent to update stats without re-rendering everything
         $this->dispatch('update-stats');
+        $this->dispatch('task-deleted', 'Task deleted successfully.');
 
-        session()->flash('success', 'Task deleted.');
+        // session()->flash('success', 'Task deleted.');
     }
+
+    public function cancelDelete(): void
+{
+    $this->deletingTaskId = null;
+}
 
     public function render()
     {

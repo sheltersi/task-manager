@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Comment;
 use App\Models\Task;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -34,7 +35,7 @@ class TaskComment extends Component
 
     public function delete(int $id): void
     {
-        $comment = \App\Models\Comment::findOrFail($id);
+        $comment = Comment::findOrFail($id);
 
         // Only the comment author can delete their own comment
         if ($comment->user_id !== auth()->id()) {

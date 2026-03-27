@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Task;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -37,13 +38,20 @@ class TaskForm extends Component
     public function mount(?Task $task = null): void
     {
         if ($task) {
-            Gate::authorize('update', $task);
             $this->task = $task;
-            $this->title = $task->title;
-            $this->description = $task->description ?? '';
-            $this->status = $task->status;
-            $this->priority = $task->priority;
-            $this->due_date = $task->due_date?->format('Y-m-d');
+
+            $this->task = $task;
+            $this->fill([
+                'title' => $task->title,
+                'description' => $task->description ?? '',
+                'status' => $task->status,
+                'priority' => $task->priority,
+                'due_date' => $task->due_date?->format('Y-m-d'),
+            ]);
+            // ✅ Add this line
+            if ($task->image_path) {
+                $this->imagePreview = Storage::disk('public')->url($task->image_path);
+            }
         }
     }
 
@@ -58,6 +66,12 @@ class TaskForm extends Component
 
     public function removeImage(): void
     {
+        // ✅ Delete the stored image if editing an existing task
+        if ($this->task && $this->task->image_path) {
+            Storage::disk('public')->delete($this->task->image_path);
+            $this->task->update(['image_path' => null]);
+        }
+
         $this->image = null;
         $this->imagePreview = null;
     }
@@ -66,29 +80,55 @@ class TaskForm extends Component
     {
         $validated = $this->validate();
 
-        $imagePath = $this->task?->image_path;
-        if ($this->image) {
-            $imagePath = $this->image->store('task-images', 'public');
-        }
-
-        $data = [
-            'title' => $validated['title'],
-            'description' => $validated['description'] ?? null,
-            'status' => $validated['status'],
-            'priority' => $validated['priority'],
-            'due_date' => $validated['due_date'] ?? null,
-            'image_path' => $imagePath,
-        ];
-
         if ($this->task) {
             Gate::authorize('update', $this->task);
-            $this->task->update($data);
+
+            $imagePath = $this->task->image_path;
+
+            if ($this->image) {
+                if ($this->task->image_path) {
+                    Storage::disk('public')->delete($this->task->image_path);
+                }
+                $imagePath = $this->image->store('task-images', 'public');
+            }
+
+            $this->task->update([
+                'title'       => $validated['title'],
+                'description' => $validated['description'] ?? null,
+                'status'      => $validated['status'],
+                'priority'    => $validated['priority'],
+                'due_date'    => $validated['due_date'] ?? null,
+                'image_path'  => $imagePath,
+            ]);
         } else {
-            auth()->user()->tasks()->create($data);
+
+            $imagePath = null;
+
+            if ($this->image) {
+                $imagePath = $this->image->store('task-images', 'public');
+            }
+
+            auth()->user()->tasks()->create([
+                'title'       => $validated['title'],
+                'description' => $validated['description'] ?? null,
+                'status'      => $validated['status'],
+                'priority'    => $validated['priority'],
+                'due_date'    => $validated['due_date'] ?? null,
+                'image_path'  => $imagePath,
+            ]);
         }
+
         $this->redirect(route('dashboard'), navigate: true);
     }
+    public function cancel(): void
+    {
+        // Clean up temp image if it exists and task was never saved
+        if ($this->image && !$this->task) {
+            Storage::delete('private/livewire-tmp/' . $this->image->getFilename());
+        }
 
+        $this->redirect(route('dashboard'), navigate: true);
+    }
     public function render()
     {
         return view('livewire.task-form');
