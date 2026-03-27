@@ -9,24 +9,25 @@ use Livewire\Component;
 class TaskPrioritySelect extends Component
 {
     public Task $task;
+
     public int $priority;
 
-      public function mount(Task $task): void
+    public function mount(Task $task): void
     {
         Gate::authorize('update', $task);
-        $this->task     = $task;
+        $this->task = $task;
         $this->priority = $task->priority;
     }
 
-      public function setPriority(int $value): void
+    public function setPriority(int $value): void
     {
         Gate::authorize('update', $this->task);
         $this->priority = $value;
         $this->task->update(['priority' => $this->priority]);
-          // Tell the parent to update stats without re-rendering everything
-        $this->dispatch('update-stats');
+        $this->dispatch('task-priority-updated');
     }
-        public function render()
+
+    public function render()
     {
         return view('livewire.task-priority-select');
     }

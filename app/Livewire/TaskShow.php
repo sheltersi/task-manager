@@ -20,9 +20,7 @@ class TaskShow extends Component
     //     'policy_result' => auth()->user()->can('view', $task),
     // ]);
         Gate::authorize('view', $task);
-        // dd('we are here');
         $this->task = $task;
-        // dd('we are here 2');
 
     }
     public function delete(): void
