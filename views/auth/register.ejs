@@ -1,0 +1,103 @@
+<%- include('../partials/guest-start', { pageTitle: 'Register' }) %>
+
+<p class="text-2xl font-bold text-gray-800 text-center tracking-tight my-6">
+    Create account
+</p>
+
+<% if (Object.keys(errors).length > 0) { %>
+    <div class="mb-4">
+        <div class="font-medium text-sm text-red-600">Whoops! Something went wrong.</div>
+        <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+            <% Object.values(errors).forEach((error) => { %>
+                <li><%= error %></li>
+            <% }) %>
+        </ul>
+    </div>
+<% } %>
+
+<form method="POST" action="/register">
+    <div>
+        <label for="name" class="block font-medium text-sm text-gray-700">Name</label>
+        <input id="name"
+               class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full"
+               type="text" name="name" value="<%= old('name') %>" required autofocus autocomplete="name" />
+    </div>
+
+    <div class="mt-4">
+        <label for="email" class="block font-medium text-sm text-gray-700">Email</label>
+        <input id="email"
+               class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full"
+               type="email" name="email" value="<%= old('email') %>" required autocomplete="username" />
+    </div>
+
+    <div class="mt-4">
+        <label for="position" class="block font-medium text-sm text-gray-700">Job Title / Position</label>
+        <input id="position"
+               class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full"
+               type="text" name="position" value="<%= old('position') %>" placeholder="e.g. Lead Developer" />
+    </div>
+
+    <div class="mt-4">
+        <label for="password" class="block font-medium text-sm text-gray-700">Password</label>
+
+        <div x-data="{ show: false }" class="relative mt-1">
+            <input id="password"
+                   class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full pr-10"
+                   x-bind:type="show ? 'text' : 'password'"
+                   name="password" required autocomplete="new-password" />
+
+            <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center" @click="show = !show">
+                <svg x-show="!show" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+
+                <svg x-show="show" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.025 10.025 0 014.132-5.411m0 0L21 21m-2.102-2.102L12 12m-2.898-2.898L3 3" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <label for="password_confirmation" class="block font-medium text-sm text-gray-700">Confirm Password</label>
+
+        <div x-data="{ show: false }" class="relative mt-1">
+            <input id="password_confirmation"
+                   class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full pr-10"
+                   x-bind:type="show ? 'text' : 'password'"
+                   name="password_confirmation" required autocomplete="new-password" />
+
+            <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center" @click="show = !show">
+                <svg x-show="!show" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+
+                <svg x-show="show" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.025 10.025 0 014.132-5.411m0 0L21 21m-2.102-2.102L12 12m-2.898-2.898L3 3" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-end mt-4">
+        <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+           href="/login">
+            Already registered?
+        </a>
+
+        <button type="submit"
+                class="ms-4 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+            Register
+        </button>
+    </div>
+</form>
+
+<%- include('../partials/guest-end') %>

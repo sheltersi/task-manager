@@ -1,0 +1,45 @@
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const successMsg = <%- JSON.stringify(success || '') %>;
+            if (successMsg && window.Swal) {
+                window.Swal.fire({
+                    title: 'Success!',
+                    text: successMsg,
+                    icon: 'success',
+                    confirmButtonColor: '#4F46E5',
+                });
+            }
+
+            document.querySelectorAll('.delete-btn').forEach((button) => {
+                button.addEventListener('click', function() {
+                    const form = this.closest('.delete-form');
+                    if (!form) return;
+
+                    if (window.Swal) {
+                        window.Swal.fire({
+                            title: 'Are you sure?',
+                            text: 'This task will be permanently removed!',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#ef4444',
+                            cancelButtonColor: '#6b7280',
+                            confirmButtonText: 'Yes, delete it!',
+                            background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#fff',
+                            color: document.documentElement.classList.contains('dark') ? '#fff' : '#000',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    } else {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

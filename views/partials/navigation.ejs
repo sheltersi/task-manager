@@ -1,0 +1,140 @@
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-200">
+    <!-- Primary Navigation Menu -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex items-center gap-8">
+                <!-- Logo -->
+                <div class="shrink-0 flex items-center">
+                    <a href="/dashboard" class="flex items-center gap-2.5 whitespace-nowrap shrink-0">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="block h-8 w-auto">
+                            <path d="M11.395 44.428C4.557 40.198 0 32.632 0 24 0 10.745 10.745 0 24 0a23.891 23.891 0 0113.997 4.502c-.2 17.907-11.097 33.245-26.602 39.926z" fill="#4F46E5"/>
+                            <path d="M14.134 45.885A23.914 23.914 0 0024 48c13.255 0 24-10.745 24-24 0-3.516-.756-6.856-2.115-9.866-4.659 15.143-16.608 27.092-31.75 31.751z" fill="#4F46E5"/>
+                        </svg>
+                        <span class="font-semibold text-gray-900 tracking-tight whitespace-nowrap shrink-0"><%= appName %></span>
+                    </a>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden sm:flex sm:items-center sm:space-x-8 h-16">
+                    <a href="/dashboard"
+                       class="inline-flex items-center h-16 px-1 border-b-2 text-sm font-medium whitespace-nowrap shrink-0 transition duration-150 ease-in-out <%= currentPath === '/dashboard' || currentPath.startsWith('/tasks') ? 'border-indigo-600 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300' %>">
+                        Tasks
+                    </a>
+
+                    <a href="/timesheets"
+                       class="inline-flex items-center h-16 px-1 border-b-2 text-sm font-medium whitespace-nowrap shrink-0 transition duration-150 ease-in-out <%= currentPath.startsWith('/timesheets') ? 'border-indigo-600 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300' %>">
+                        Timesheets
+                    </a>
+                </div>
+            </div>
+
+            <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <!-- Settings Dropdown -->
+                <div class="ms-3 relative" x-data="{ dropdownOpen: false }" @click.outside="dropdownOpen = false">
+                    <div>
+                        <button type="button"
+                                @click="dropdownOpen = !dropdownOpen"
+                                class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <img class="w-8 h-8 rounded-full object-cover"
+                                 src="<%= user.profile_photo_url %>" alt="<%= user.name %>" />
+
+                            <span class="hidden sm:block text-sm font-medium text-gray-700 whitespace-nowrap shrink-0">
+                                <%= user.name %>
+                            </span>
+
+                            <svg class="w-4 h-4 text-gray-400"
+                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                      clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div x-show="dropdownOpen"
+                         x-cloak
+                         x-transition
+                         class="absolute z-50 mt-2 w-48 rounded-md shadow-lg end-0 origin-top-right">
+                        <div class="rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white">
+                            <div class="block px-4 py-2 text-xs text-gray-400">
+                                Manage Account
+                            </div>
+
+                            <a href="/user/profile"
+                               class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+                                Profile
+                            </a>
+
+                            <div class="border-t border-gray-200"></div>
+
+                            <form method="POST" action="/logout">
+                                <button type="submit"
+                                        class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+                                    Log Out
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hamburger -->
+            <div class="-me-2 flex items-center sm:hidden">
+                <button type="button"
+                        @click="open = !open"
+                        class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                    <svg class="size-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 6h16M4 12h16M4 18h16" />
+                        <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
+                              stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Responsive Navigation Menu -->
+    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
+        <div class="pt-2 pb-3 space-y-1">
+            <a href="/dashboard"
+               class="block w-full ps-4 pe-4 py-2 text-start text-base font-medium transition duration-150 ease-in-out <%= currentPath === '/dashboard' || currentPath.startsWith('/tasks') ? 'text-indigo-700 bg-indigo-50' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50' %>">
+                Tasks
+            </a>
+            <a href="/timesheets"
+               class="block w-full ps-4 pe-4 py-2 text-start text-base font-medium transition duration-150 ease-in-out <%= currentPath.startsWith('/timesheets') ? 'text-indigo-700 bg-indigo-50' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50' %>">
+                Timesheets
+            </a>
+        </div>
+
+        <!-- Responsive Settings Options -->
+        <div class="pt-4 pb-1 border-t border-gray-200">
+            <div class="flex items-center px-4">
+                <div class="shrink-0 me-3">
+                    <img class="size-10 rounded-full object-cover" src="<%= user.profile_photo_url %>"
+                         alt="<%= user.name %>" />
+                </div>
+
+                <div>
+                    <div class="font-medium text-base text-gray-800"><%= user.name %></div>
+                    <div class="font-medium text-sm text-gray-500"><%= user.email %></div>
+                </div>
+            </div>
+
+            <div class="mt-3 space-y-1">
+                <a href="/user/profile"
+                   class="block w-full ps-4 pe-4 py-2 text-start text-base font-medium transition duration-150 ease-in-out <%= currentPath === '/user/profile' ? 'text-indigo-700 bg-indigo-50' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50' %>">
+                    Profile
+                </a>
+
+                <form method="POST" action="/logout">
+                    <button type="submit"
+                            class="block w-full ps-4 pe-4 py-2 text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition duration-150 ease-in-out">
+                        Log Out
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>

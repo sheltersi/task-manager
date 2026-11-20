@@ -1,0 +1,156 @@
+<%- include('../partials/app-start', {
+    pageTitle: 'Edit Task',
+    headerTitle: 'Edit Task',
+    headerSubtitle: `Update details for: <span class="font-semibold text-indigo-600">${task.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`,
+    headerActionHref: '/dashboard',
+    headerActionLabel: '← Back to Tasks',
+    headerActionClass: 'inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition shadow-sm'
+}) %>
+
+<div class="py-10">
+    <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+
+        <div class="relative overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm">
+            <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+
+            <form method="POST" action="/tasks/<%= task.id %>" class="p-6 sm:p-8">
+                <input type="hidden" name="_method" value="PUT">
+
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900">Task Details</h3>
+                    <p class="mt-1 text-sm text-gray-600">
+                        Keep it clear and actionable. You can also change the workflow stage and priority.
+                    </p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Title -->
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700">
+                            Task Title <span class="text-red-500">*</span>
+                        </label>
+
+                        <div class="mt-2 relative">
+                            <input type="text"
+                                   name="title"
+                                   id="title"
+                                   value="<%= old('title', task.title) %>"
+                                   class="block w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+                                   placeholder="e.g. Finish internship assessment"
+                                   required>
+                        </div>
+
+                        <% if (errors.title) { %>
+                            <p class="mt-2 text-sm text-red-600"><%= errors.title %></p>
+                        <% } %>
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">
+                            Description <span class="text-gray-400">(optional)</span>
+                        </label>
+
+                        <div class="mt-2">
+                            <textarea name="description"
+                                      id="description"
+                                      rows="4"
+                                      class="block w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+                                      placeholder="Add extra context or steps..."><%= old('description', task.description || '') %></textarea>
+                        </div>
+
+                        <% if (errors.description) { %>
+                            <p class="mt-2 text-sm text-red-600"><%= errors.description %></p>
+                        <% } %>
+                    </div>
+
+                    <!-- Status / Priority / Due Date -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Status -->
+                        <div>
+                            <label for="status" class="block text-sm font-medium text-gray-700">
+                                Status
+                            </label>
+
+                            <div class="mt-2">
+                                <% const selectedStatus = old('status', task.status); %>
+                                <select name="status"
+                                        id="status"
+                                        class="block w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm">
+                                    <option value="to_do" <%= selectedStatus === 'to_do' ? 'selected' : '' %>>To Do</option>
+                                    <option value="in_progress" <%= selectedStatus === 'in_progress' ? 'selected' : '' %>>In Progress</option>
+                                    <option value="in_review" <%= selectedStatus === 'in_review' ? 'selected' : '' %>>In Review</option>
+                                    <option value="completed" <%= selectedStatus === 'completed' ? 'selected' : '' %>>Completed</option>
+                                </select>
+                            </div>
+
+                            <% if (errors.status) { %>
+                                <p class="mt-2 text-sm text-red-600"><%= errors.status %></p>
+                            <% } %>
+                        </div>
+
+                        <!-- Priority -->
+                        <div>
+                            <label for="priority" class="block text-sm font-medium text-gray-700">
+                                Priority
+                            </label>
+
+                            <div class="mt-2">
+                                <% const selectedPriority = String(old('priority', String(task.priority))); %>
+                                <select name="priority"
+                                        id="priority"
+                                        class="block w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm">
+                                    <option value="1" <%= selectedPriority === '1' ? 'selected' : '' %>>1 — Lowest</option>
+                                    <option value="2" <%= selectedPriority === '2' ? 'selected' : '' %>>2 — Low</option>
+                                    <option value="3" <%= selectedPriority === '3' ? 'selected' : '' %>>3 — Medium</option>
+                                    <option value="4" <%= selectedPriority === '4' ? 'selected' : '' %>>4 — High</option>
+                                    <option value="5" <%= selectedPriority === '5' ? 'selected' : '' %>>5 — Highest</option>
+                                </select>
+                            </div>
+
+                            <% if (errors.priority) { %>
+                                <p class="mt-2 text-sm text-red-600"><%= errors.priority %></p>
+                            <% } %>
+                        </div>
+
+                        <!-- Due Date -->
+                        <div>
+                            <label for="due_date" class="block text-sm font-medium text-gray-700">
+                                Due Date
+                            </label>
+
+                            <div class="mt-2">
+                                <input type="date"
+                                       name="due_date"
+                                       id="due_date"
+                                       value="<%= old('due_date', h.formatInputDate(task.due_date)) %>"
+                                       class="block w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm">
+                            </div>
+
+                            <% if (errors.due_date) { %>
+                                <p class="mt-2 text-sm text-red-600"><%= errors.due_date %></p>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="mt-10 pt-6 border-t border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="text-xs text-gray-500">
+                        Tip: Keep tasks short and use “In Review” when you’re waiting for approval.
+                    </div>
+
+                    <div class="flex items-center justify-end gap-3">
+                        <button type="submit"
+                                class="inline-flex items-center px-8 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-sm transition transform hover:-translate-y-0.5 active:translate-y-0">
+                            Update Task
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<%- include('../partials/app-end') %>

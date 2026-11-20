@@ -1,0 +1,180 @@
+<%- include('../partials/app-start', {
+    pageTitle: 'Profile',
+    headerTitle: 'Profile',
+    headerActionHref: '/dashboard',
+    headerActionLabel: '← Back to Dashboard',
+    headerActionClass: 'inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition shadow-sm'
+}) %>
+
+<div>
+    <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8 space-y-10">
+
+        <!-- Profile Information -->
+        <div class="md:grid md:grid-cols-3 md:gap-6">
+            <div class="md:col-span-1">
+                <h3 class="text-lg font-medium text-gray-900">Profile Information</h3>
+                <p class="mt-1 text-sm text-gray-600">
+                    Update your account's profile information, job position, and email address.
+                </p>
+            </div>
+
+            <div class="mt-5 md:mt-0 md:col-span-2">
+                <form method="POST" action="/user/profile-information">
+                    <input type="hidden" name="_method" value="PUT">
+                    <div class="px-4 py-5 bg-white sm:p-6 shadow sm:rounded-tl-md sm:rounded-tr-md">
+                        <div class="grid grid-cols-6 gap-6">
+                            <!-- Current Avatar -->
+                            <div class="col-span-6 sm:col-span-4 flex items-center gap-4">
+                                <img src="<%= user.profile_photo_url %>" alt="<%= user.name %>" class="rounded-full size-16 object-cover">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900"><%= user.name %></p>
+                                    <p class="text-xs text-gray-500"><%= user.position || 'No position set' %></p>
+                                </div>
+                            </div>
+
+                            <!-- Name -->
+                            <div class="col-span-6 sm:col-span-4">
+                                <label for="name" class="block font-medium text-sm text-gray-700">Name</label>
+                                <input id="name" name="name" type="text"
+                                       class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                                       value="<%= old('name', user.name) %>" required autocomplete="name">
+                                <% if (errors.name) { %>
+                                    <p class="mt-2 text-sm text-red-600"><%= errors.name %></p>
+                                <% } %>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-span-6 sm:col-span-4">
+                                <label for="email" class="block font-medium text-sm text-gray-700">Email</label>
+                                <input id="email" name="email" type="email"
+                                       class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                                       value="<%= old('email', user.email) %>" required autocomplete="username">
+                                <% if (errors.email) { %>
+                                    <p class="mt-2 text-sm text-red-600"><%= errors.email %></p>
+                                <% } %>
+                            </div>
+
+                            <!-- Position -->
+                            <div class="col-span-6 sm:col-span-4">
+                                <label for="position" class="block font-medium text-sm text-gray-700">Job Title / Position</label>
+                                <input id="position" name="position" type="text"
+                                       class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                                       value="<%= old('position', user.position) %>" autocomplete="organization-title">
+                                <% if (errors.position) { %>
+                                    <p class="mt-2 text-sm text-red-600"><%= errors.position %></p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-end sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
+                        <button type="submit"
+                                class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="hidden sm:block">
+            <div class="border-t border-gray-200"></div>
+        </div>
+
+        <!-- Update Password -->
+        <div class="md:grid md:grid-cols-3 md:gap-6">
+            <div class="md:col-span-1">
+                <h3 class="text-lg font-medium text-gray-900">Update Password</h3>
+                <p class="mt-1 text-sm text-gray-600">
+                    Ensure your account is using a long, random password to stay secure.
+                </p>
+            </div>
+
+            <div class="mt-5 md:mt-0 md:col-span-2">
+                <form method="POST" action="/user/password">
+                    <input type="hidden" name="_method" value="PUT">
+                    <div class="px-4 py-5 bg-white sm:p-6 shadow sm:rounded-tl-md sm:rounded-tr-md">
+                        <div class="grid grid-cols-6 gap-6">
+                            <div class="col-span-6 sm:col-span-4">
+                                <label for="current_password" class="block font-medium text-sm text-gray-700">Current Password</label>
+                                <input id="current_password" name="current_password" type="password"
+                                       class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                                       autocomplete="current-password" required>
+                                <% if (errors.current_password) { %>
+                                    <p class="mt-2 text-sm text-red-600"><%= errors.current_password %></p>
+                                <% } %>
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-4">
+                                <label for="password" class="block font-medium text-sm text-gray-700">New Password</label>
+                                <input id="password" name="password" type="password"
+                                       class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                                       autocomplete="new-password" required>
+                                <% if (errors.password) { %>
+                                    <p class="mt-2 text-sm text-red-600"><%= errors.password %></p>
+                                <% } %>
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-4">
+                                <label for="password_confirmation" class="block font-medium text-sm text-gray-700">Confirm Password</label>
+                                <input id="password_confirmation" name="password_confirmation" type="password"
+                                       class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                                       autocomplete="new-password" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-end sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
+                        <button type="submit"
+                                class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="hidden sm:block">
+            <div class="border-t border-gray-200"></div>
+        </div>
+
+        <!-- Delete Account -->
+        <div class="md:grid md:grid-cols-3 md:gap-6">
+            <div class="md:col-span-1">
+                <h3 class="text-lg font-medium text-gray-900">Delete Account</h3>
+                <p class="mt-1 text-sm text-gray-600">
+                    Permanently delete your account.
+                </p>
+            </div>
+
+            <div class="mt-5 md:mt-0 md:col-span-2">
+                <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-lg">
+                    <div class="max-w-xl text-sm text-gray-600">
+                        Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please enter your password to confirm.
+                    </div>
+
+                    <form method="POST" action="/user" class="mt-5 space-y-4 max-w-md">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <div>
+                            <label for="delete_password" class="block font-medium text-sm text-gray-700">Confirm Password</label>
+                            <input id="delete_password" name="password" type="password"
+                                   class="border-gray-300 focus:border-red-500 focus:ring-red-500 rounded-md shadow-sm mt-1 block w-full"
+                                   placeholder="Enter your password" required>
+                            <% if (errors.delete_password) { %>
+                                <p class="mt-2 text-sm text-red-600"><%= errors.delete_password %></p>
+                            <% } %>
+                        </div>
+
+                        <button type="submit"
+                                class="inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Delete Account
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<%- include('../partials/app-end') %>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./head') %>
+</head>
+<body class="font-sans antialiased">
+    <div class="min-h-screen bg-gray-100">
+        <%- include('./navigation') %>
+
+        <% if (typeof headerTitle !== 'undefined' && headerTitle) { %>
+            <header class="bg-white shadow">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-start sm:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                                <%= headerTitle %>
+                            </h2>
+                            <% if (typeof headerSubtitle !== 'undefined' && headerSubtitle) { %>
+                                <p class="mt-1 text-sm text-gray-600">
+                                    <%- headerSubtitle %>
+                                </p>
+                            <% } %>
+                        </div>
+
+                        <% if (typeof headerActionHref !== 'undefined' && headerActionHref) { %>
+                            <a href="<%= headerActionHref %>"
+                               class="<%= typeof headerActionClass !== 'undefined' && headerActionClass ? headerActionClass : 'inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow' %>">
+                                <%= headerActionLabel %>
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+            </header>
+        <% } %>
+
+        <main>
